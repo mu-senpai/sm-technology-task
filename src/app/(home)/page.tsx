@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import AboutUs from "./components/AboutUs";
 import Banner from "./components/Banner";
 import OurBlog from "./components/OurBlog";
@@ -14,6 +15,7 @@ export default function Home() {
       <SpecialOffer />
       <Testimonial />
       <OurBlog />
+      <Footer />
     </div>
   );
 }

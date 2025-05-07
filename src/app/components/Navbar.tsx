@@ -6,14 +6,14 @@ import { Menu as MenuIcon, ShoppingCart as ShoppingCartIcon, FavoriteBorder as F
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import LoginModal from "@/app/components/LoginModal";
-import RegisterModal from "@/app/components/RegisterModal";
+// import LoginModal from "@/app/components/LoginModal";
+// import RegisterModal from "@/app/components/RegisterModal";
 
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
+  // const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  // const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const pathname = usePathname();
   const user = false; // Set this dynamically based on user login status
 
@@ -96,7 +96,7 @@ export default function Navbar() {
         }}
       >
         <Toolbar className="mx-auto w-full flex justify-between">
-          <Link href="/" className="relative w-[180px] sm:w-[225px] aspect-[6/1]">
+          <Link href="/" className="relative w-[160px] sm:w-[225px] aspect-[6/1]">
             <Image src="/logo.svg" alt="Fresh Harvests" layout="fill" />
           </Link>
 
@@ -113,7 +113,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-3 lg:space-x-6">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
             {/* Favorites */}
             <Link href="#" className="hidden lg:flex">
               <IconButton sx={{ color: scrolled || pathname !== "/" ? "black" : "white" }}>
@@ -138,18 +138,19 @@ export default function Navbar() {
             ) : (
               <Button
                 variant="outlined"
+                size="small"
                 sx={{
                   borderColor: scrolled || pathname !== "/" ? "black" : "white",
                   color: scrolled || pathname !== "/" ? "black" : "white",
-                  px: 3,
                   borderRadius: "8px",
                   textTransform: "none",
+                  paddingX: "2px",
                   "&:hover": {
                     borderColor: scrolled || pathname !== "/" ? "black" : "white",
                     backgroundColor: "rgba(255,255,255,0.15)",
                   },
                 }}
-                onClick={() => setLoginModalOpen(true)}
+                // onClick={() => setLoginModalOpen(true)}
               >
                 Sign In
               </Button>
@@ -188,8 +189,8 @@ export default function Navbar() {
         {drawerList}
       </Drawer>
 
-      <LoginModal open={isLoginModalOpen} onClose={() => setLoginModalOpen(false)} />
-      <RegisterModal open={isRegisterModalOpen} onClose={() => setRegisterModalOpen(false)} />
+      {/* <LoginModal open={isLoginModalOpen} onClose={() => setLoginModalOpen(false)} />
+      <RegisterModal open={isRegisterModalOpen} onClose={() => setRegisterModalOpen(false)} /> */}
     </>
   );
 }
