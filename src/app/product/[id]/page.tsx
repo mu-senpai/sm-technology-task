@@ -45,7 +45,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       {/* ------- description / reviews (placeholder) ------- */}
       <section className="mt-8">
         <div className="flex gap-2 mb-6">
-          <Chip label="Description" sx={{ backgroundColor: "#749B3F", color: "white", borderRadius: "6px", cursor: "pointer" }} />
+          <Chip label="Description" sx={{ backgroundColor: "#749B3F", color: "white", borderRadius: "6px", cursor: "pointer"}} />
           <Chip label={`Reviews (0)`} sx={{ borderRadius: "6px", backgroundColor: "white", color: "gray", border: "1px solid gray", cursor: "pointer" }} />
         </div>
         <p className="w-full lg:w-[60%] bg-[#F4F6F6] p-6 rounded-lg text-xs md:text-sm xl:text-base leading-relaxed">
