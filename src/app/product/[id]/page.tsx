@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { notFound } from "next/navigation";
 import { Chip, CircularProgress } from "@mui/material";
@@ -12,7 +10,9 @@ import ProductDetails from "./components/ProductDetails";
 import RelatedProducts from "./components/RelatedProducts";
 
 interface Props {
-  params: { id: string };
+  params: {
+    id: string;
+  };
 }
 
 export default function ProductPage({ params }: Props) {
@@ -53,11 +53,10 @@ export default function ProductPage({ params }: Props) {
       <section className="mt-8">
         <div className="flex gap-2 mb-6">
           <Chip label="Description" sx={{ backgroundColor: "#749B3F", color: "white", borderRadius: "6px", cursor: "pointer"}} />
-          <Chip label={`Reviews (0)`} sx={{ borderRadius: "6px", backgroundColor: "white", color: "gray", border: "1px solid gray", cursor: "pointer" }}/>
+          <Chip label={`Reviews (0)`} sx={{ borderRadius: "6px", backgroundColor: "white", color: "gray", border: "1px solid gray", cursor: "pointer" }} />
         </div>
         <p className="w-full lg:w-[60%] bg-[#F4F6F6] p-6 rounded-lg text-xs md:text-sm xl:text-base leading-relaxed">
-          {product?.description ??
-            "No description available for this product."}
+          {product?.description ?? "No description available for this product."}
         </p>
       </section>
 
