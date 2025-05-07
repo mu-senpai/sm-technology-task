@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { notFound } from "next/navigation";
 import { Chip, CircularProgress } from "@mui/material";
@@ -6,7 +8,7 @@ import { Product } from "@/app/(home)/components/ProductCard";
 import ProductDetails from "./components/ProductDetails";
 import RelatedProducts from "./components/RelatedProducts";
 
-// The expected shape of the params in a dynamic route
+// Directly access params from the dynamic route
 interface Params {
   id: string;
 }
@@ -45,7 +47,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       {/* ------- description / reviews (placeholder) ------- */}
       <section className="mt-8">
         <div className="flex gap-2 mb-6">
-          <Chip label="Description" sx={{ backgroundColor: "#749B3F", color: "white", borderRadius: "6px", cursor: "pointer"}} />
+          <Chip label="Description" sx={{ backgroundColor: "#749B3F", color: "white", borderRadius: "6px", cursor: "pointer" }} />
           <Chip label={`Reviews (0)`} sx={{ borderRadius: "6px", backgroundColor: "white", color: "gray", border: "1px solid gray", cursor: "pointer" }} />
         </div>
         <p className="w-full lg:w-[60%] bg-[#F4F6F6] p-6 rounded-lg text-xs md:text-sm xl:text-base leading-relaxed">
@@ -57,15 +59,4 @@ export default function ProductPage({ params }: ProductPageProps) {
       {related?.length > 0 && <RelatedProducts products={related} />}
     </main>
   );
-}
-
-// Adding getServerSideProps to get the params for the dynamic route
-export async function getServerSideProps(context: any) {
-  const { params } = context;
-
-  return {
-    props: {
-      params, // Passing the params to the component
-    },
-  };
 }
