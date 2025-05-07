@@ -1,6 +1,7 @@
 import React from 'react';
 import { Chip } from '@mui/material';
 import BlogCard from './BlogCard';
+import Image from 'next/image';
 
 const OurBlog: React.FC = () => {
   const blogData = [
@@ -25,7 +26,7 @@ const OurBlog: React.FC = () => {
   ];
 
   return (
-    <section className="w-[90%] md:w-[83.33%] mx-auto py-20 sm:py-24 md:py-28 lg:py-32 xl:py-36 bg-white">
+    <section className="relative w-[90%] md:w-[83.33%] mx-auto py-20 sm:py-24 md:py-28 lg:py-32 xl:py-36 bg-white">
       <div className="text-center mb-8">
         <Chip label="Our Blog" sx={{ backgroundColor: '#eaeee5', color: '#749B3F', fontWeight: 600, fontSize: '1.25rem', marginBottom: '16px' }} />
         <h2 className="text-[clamp(2rem,5vw,4rem)] font-medium mb-4">
@@ -40,6 +41,10 @@ const OurBlog: React.FC = () => {
         {blogData.map((blog, index) => (
           <BlogCard key={index} {...blog} />
         ))}
+      </div>
+
+      <div className="absolute top-0 md:top-[2%] right-0 md:right-[5%] hidden md:block z-30">
+        <Image src="/leaf.png" alt="leaf" width={50} height={50} className="rotate-[260deg] scale-75" />
       </div>
     </section>
   );

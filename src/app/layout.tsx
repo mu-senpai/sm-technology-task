@@ -1,7 +1,6 @@
 import { Rubik } from 'next/font/google';
 import LayoutWrapper from '@/app/components/LayoutWrapper';
 import './globals.css';
-import Navbar from './components/Navbar';
 
 const rubik = Rubik({
   subsets: ['latin'],
@@ -19,7 +18,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${rubik.className} min-[1440px]:w-[90rem] mx-auto`}>
         <LayoutWrapper>
-          <Navbar />
           {children}
         </LayoutWrapper>
       </body>

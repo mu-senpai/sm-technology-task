@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { useGetCategoriesQuery, useGetProductsQuery } from "../../../lib/features/apiSlice";
 import ProductCard, { Product } from "./ProductCard"; // Assuming you already have this component
-import { Button, Chip } from "@mui/material";
+import { Button, Chip, CircularProgress } from "@mui/material";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 interface Category {
     id: string;
@@ -13,6 +15,7 @@ interface Category {
 
 const OurProducts: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
+    const pathname = usePathname();
 
     // Fetch all categories using RTK Query
     const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useGetCategoriesQuery({});
@@ -28,8 +31,12 @@ const OurProducts: React.FC = () => {
         setSelectedCategory(categoryId);
     };
 
-    if (categoriesLoading || allProductsLoading) return <div>Loading...</div>;
-    if (categoriesError || allProductsError) return <div>Error loading data</div>;
+    if (categoriesLoading || allProductsLoading) return <div className="flex items-center justify-center h-screen">
+        <CircularProgress />
+    </div>;
+    if (categoriesError || allProductsError) return <div className="w-full h-screen flex items-center justify-center">
+        <h3 className="text-xl md:text-3xl text-gray-400 font-medium leading-relaxed">Error loading data.</h3>
+    </div>;
 
     return (
         <section className="relative w-[90%] md:w-[83.33%] mx-auto pt-16 sm:pt-20 md:pt-36 lg:pt-44 xl:pt-48">
@@ -81,42 +88,60 @@ const OurProducts: React.FC = () => {
                 </div>
             </div>
 
+            {
+                categoriesLoading || allProductsLoading && (
+                    <div className="flex items-center justify-center h-screen">
+                        <CircularProgress />
+                    </div>
+                )
+            }
+
             {/* Product Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
-                {products?.map((product: Product) => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
-            </div>
+            {
+                products.length ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
+                        {products?.map((product: Product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="w-full h-screen flex items-center justify-center">
+                        <h3 className="text-xl md:text-3xl text-gray-400 font-medium leading-relaxed">No products available for this category.</h3>
+                    </div>
+                )
+            }
 
             {/* See All Products Button */}
-            <div className="mt-8 text-center relative z-30">
-                <Button
-                    variant="contained"
-                    sx={{
-                        ":hover": {
-                            backgroundColor: "#FF6A1A",
+            <Link href={'/shop'}>
+                <div className={`mt-8 text-center relative z-30 ${pathname === '/shop' ? 'hidden' : ''}`}>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            ":hover": {
+                                backgroundColor: "#FF6A1A",
+                                border: "1px solid #FF6A1A",
+                                color: "white",
+                            },
+                            backgroundColor: "transparent",
                             border: "1px solid #FF6A1A",
-                            color: "white",
-                        },
-                        backgroundColor: "transparent",
-                        border: "1px solid #FF6A1A",
-                        boxShadow: "none",
-                        color: "#FF6A1A",
-                        fontWeight: 600,
-                        borderRadius: "8px",
-                        display: "inline",
-                        textTransform: "capitalize",
-                    }}
-                >
-                    See All Products
-                </Button>
-            </div>
+                            boxShadow: "none",
+                            color: "#FF6A1A",
+                            fontWeight: 600,
+                            borderRadius: "8px",
+                            display: "inline",
+                            textTransform: "capitalize",
+                        }}
+                    >
+                        See All Products
+                    </Button>
+                </div>
+            </Link>
 
-            <div className="absolute top-[1.5%] md:top-[5%] left-0 md:left-[5%] z-30">
+            <div className="absolute top-10 md:top-30 left-0 md:left-23 z-30">
                 <Image src="/leaf.png" alt="leaf" width={50} height={50} className="rotate-[320deg] scale-75" />
             </div>
 
-            <div className="absolute top-0 md:top-[2%] right-0 md:right-[5%] z-30">
+            <div className="absolute top-0 md:top-14 right-0 md:right-20 z-30">
                 <Image src="/leaf.png" alt="leaf" width={50} height={50} className="rotate-[260deg] scale-75" />
             </div>
         </section>

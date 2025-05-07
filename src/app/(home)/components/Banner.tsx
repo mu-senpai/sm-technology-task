@@ -1,5 +1,6 @@
 import { Button, Chip } from "@mui/material";
 import Image from "next/image";
+import Link from "next/link";
 
 const Banner = () => {
   return (
@@ -34,9 +35,11 @@ const Banner = () => {
             At Fresh Harvest, we are passionate about providing you with the freshest and most flavorful fruits and vegetables.
           </p>
 
-          <Button variant="contained" color="primary" size="medium" sx={{ backgroundColor: '#FF6A1A', color: "white", fontSize: '1rem', fontWeight: 600, borderRadius: '8px' }}>
-            Shop Now
-          </Button>
+          <Link href={'/shop'}>
+            <Button variant="contained" color="primary" size="medium" sx={{ backgroundColor: '#FF6A1A', color: "white", fontSize: '1rem', fontWeight: 600, borderRadius: '8px' }}>
+              Shop Now
+            </Button>
+          </Link>
 
           {/* Arrow to Offer */}
           <div className="absolute hidden md:block md:-bottom-20 xl:-bottom-30 md:left-20 left-25 z-20">

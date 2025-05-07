@@ -1,39 +1,40 @@
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-import { Modal, Box, TextField, Button, Typography, FormControlLabel, Checkbox, IconButton, Link } from "@mui/material";
-import { Google as GoogleIcon, Facebook as FacebookIcon } from "@mui/icons-material";
-import CloseIcon from "@mui/icons-material/Close";
-import { useDispatch } from "react-redux";
-import { setToken } from "@/lib/features/authSlice"; // Redux action to set token
+import React, { useState } from 'react';
+import { Modal, Box, TextField, Button, Typography, FormControlLabel, Checkbox, IconButton, Link } from '@mui/material';
+import { Google as GoogleIcon, Facebook as FacebookIcon } from '@mui/icons-material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch } from 'react-redux';
+import { setToken } from '@/lib/features/authSlice'; // Redux action to set token
+import { useLoginUserMutation } from '@/lib/features/apiSlice'; // RTK Query hook
+import { openRegisterModal } from '@/lib/features/modalSlice'; // Modal actions
 
-const LoginModal: React.FC = ({ open, onClose }: any) => {
+// Define types for the props
+interface LoginModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("https://code-commando.com/api/v1/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        dispatch(setToken(data.token)); // Store token in Redux
-        onClose(); // Close the modal after login
-      } else {
-        alert("Invalid login credentials");
-      }
+      const response = await loginUser({ email, password }).unwrap();
+      dispatch(setToken(response.token)); // Store token in Redux
+      onClose(); // Close the modal after login
     } catch (error) {
       console.error(error);
-      alert("Login failed. Please try again.");
+      alert('Login failed. Please try again.');
     }
+  };
+
+  const handleRegisterLink = () => {
+    dispatch(openRegisterModal()); // Open Register Modal when clicking on "Sign Up"
+    onClose(); // Close Login Modal
   };
 
   return (
@@ -66,41 +67,68 @@ const LoginModal: React.FC = ({ open, onClose }: any) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <FormControlLabel
-            control={<Checkbox checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />}
-            label="Remember me"
-          />
+          <div className="mb-4 flex justify-between items-center">
+            <FormControlLabel
+              control={<Checkbox checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />}
+              label="Remember me"
+            />
+            <Link href="#" variant="body2">
+              Forgot Password
+            </Link>
+          </div>
           <Button
             variant="contained"
             fullWidth
             type="submit"
-            className="mt-4"
-            sx={{ backgroundColor: "#FF6A1A" }}
+            sx={{ backgroundColor: '#FF6A1A' }}
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? "Logging in..." : "Login"}
           </Button>
-
-          {/* Forgot Password and Social Media Login */}
-          <div className="mt-4 flex justify-between items-center">
-            <Link href="#" variant="body2" onClick={() => alert('Forgot Password clicked')}>
-              Forgot Password
-            </Link>
-            <div className="flex space-x-4">
-              <IconButton>
-                <GoogleIcon />
-              </IconButton>
-              <IconButton>
-                <FacebookIcon />
-              </IconButton>
-            </div>
-          </div>
         </form>
 
-        {/* Register Link */}
+        <div className='my-4 flex gap-2 items-center'>
+          <hr className='flex-1' />
+          <p>Or Sign In with</p>
+          <hr className='flex-1' />
+        </div>
+
+        <div className='w-full flex items-center justify-between'>
+          <Button
+            variant='outlined'
+            sx={{
+              width: "48.5%",
+              border: "1px solid gray",
+              color: "gray",
+              textTransform: "capitalize",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px"
+            }}
+          >
+            <GoogleIcon /> Google
+          </Button>
+
+          <Button
+            variant='outlined'
+            sx={{
+              width: "48.5%",
+              border: "1px solid gray",
+              color: "gray",
+              textTransform: "capitalize",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px"
+            }}
+          >
+            <FacebookIcon /> Facebook
+          </Button>
+        </div>
+
         <div className="mt-4 text-center">
           <Typography variant="body2" color="textSecondary">
-            Don't have an account?{" "}
-            <Link href="#" onClick={() => { alert('Open Register Modal'); }}>
+            Don&apos;t have an account?{' '}
+            <Link href="#" onClick={handleRegisterLink}>
               Sign Up
             </Link>
           </Typography>

@@ -1,45 +1,46 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
-import { Modal, Box, TextField, Button, Typography, IconButton } from '@mui/material';
+import { Modal, Box, TextField, Button, Typography, IconButton, Link } from '@mui/material';
 import { Google as GoogleIcon, Facebook as FacebookIcon } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch } from 'react-redux';
 import { setToken } from "@/lib/features/authSlice";
+import { useRegisterUserMutation } from '@/lib/features/apiSlice';
+import { openLoginModal } from '@/lib/features/modalSlice';
 
-const RegisterModal: React.FC = ({ open, onClose }: any) => {
+// Define types for the props
+interface RegisterModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const RegisterModal: React.FC<RegisterModalProps> = ({ open, onClose }) => {
   const dispatch = useDispatch();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
+
   const handleRegister = async () => {
     try {
-      // Simulate API call for register
-      const response = await fetch('https://code-commando.com/api/v1/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ fullName, email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        dispatch(setToken(data.token)); // store the token in Redux
-        onClose(); // Close the modal after registration
-      } else {
-        alert('Registration failed');
-      }
+      const response = await registerUser({ fullName, email, password }).unwrap();
+      dispatch(setToken(response.token));
+      onClose(); // Close the modal after registration
     } catch (error) {
       console.error(error);
       alert('Registration failed. Please try again.');
     }
   };
 
+  const handleLoginLink = () => {
+    dispatch(openLoginModal());
+    onClose(); // Close Register Modal
+  };
+
   return (
     <Modal open={open} onClose={onClose}>
       <Box className="w-full max-w-md p-6 mx-auto mt-24 bg-white rounded-lg shadow-lg">
-        <div className="flex justify-between">
+        <div className="flex justify-between mb-4">
           <Typography variant="h6">Register</Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -75,19 +76,61 @@ const RegisterModal: React.FC = ({ open, onClose }: any) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Button variant="contained" fullWidth type="submit" className="mt-4" sx={{ backgroundColor: '#FF6A1A' }}>
-            Register
+          <Button
+            variant="contained"
+            fullWidth
+            type="submit"
+            sx={{ backgroundColor: '#FF6A1A', marginTop: "16px" }}
+            disabled={isLoading}
+          >
+            {isLoading ? "Registering..." : "Register"}
           </Button>
 
-          <div className="mt-4 flex justify-between items-center">
-            <div className="flex space-x-4">
-              <IconButton>
-                <GoogleIcon />
-              </IconButton>
-              <IconButton>
-                <FacebookIcon />
-              </IconButton>
-            </div>
+          <div className='my-4 flex gap-2 items-center'>
+            <hr className='flex-1' />
+            <p>Or Sign In with</p>
+            <hr className='flex-1' />
+          </div>
+
+          <div className='w-full flex items-center justify-between'>
+            <Button
+              variant='outlined'
+              sx={{
+                width: "48.5%",
+                border: "1px solid gray",
+                color: "gray",
+                textTransform: "capitalize",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px"
+              }}
+            >
+              <GoogleIcon /> Google
+            </Button>
+
+            <Button
+              variant='outlined'
+              sx={{
+                width: "48.5%",
+                border: "1px solid gray",
+                color: "gray",
+                textTransform: "capitalize",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "4px"
+              }}
+            >
+              <FacebookIcon /> Facebook
+            </Button>
+          </div>
+
+          <div className="mt-4 text-center">
+            <Typography variant="body2" color="textSecondary">
+              Already have an account?{' '}
+              <Link href="#" onClick={handleLoginLink}>
+                Sign In
+              </Link>
+            </Typography>
           </div>
         </form>
       </Box>

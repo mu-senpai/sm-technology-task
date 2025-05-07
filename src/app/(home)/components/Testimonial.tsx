@@ -79,7 +79,7 @@ const Testimonial: React.FC = () => {
             {/* Testimonial Content */}
             <div className="pt-10 sm:pt-12 md:pt-14 xl:pt-16 pb-16 flex flex-col lg:flex-row items-center justify-between mx-auto">
                 {/* Image */}
-                <div className="w-[75%] sm:w-[60%] lg:w-[30%] flex justify-center mb-8 lg:mb-0">
+                <div className="w-[75%] sm:w-[60%] lg:w-[30%] relative flex justify-center mb-8 lg:mb-0">
                     <div className="relative w-full aspect-[3/4] rounded-full overflow-hidden">
                         <Image
                             src={testimonials[currentTestimonial].image}
@@ -89,6 +89,13 @@ const Testimonial: React.FC = () => {
                             className={currentTestimonial === 0 ? "scale-130 object-top" : ""}
                         />
                     </div>
+                    <Image
+                        src="/triple_orange.svg"
+                        alt="Orange Fang"
+                        width={100}
+                        height={100}
+                        className="absolute -top-[15%] -right-[15%] md:scale-75 lg:scale-100"
+                    />
                 </div>
 
                 {/* Testimonial Text */}
@@ -112,6 +119,14 @@ const Testimonial: React.FC = () => {
                             } hover:bg-gray-300`}
                     ></button>
                 ))}
+            </div>
+
+            <div className="absolute top-[1.5%] md:top-[5%] left-0 md:left-[5%] z-30">
+                <Image src="/leaf.png" alt="leaf" width={50} height={50} className="rotate-[320deg] scale-75" />
+            </div>
+
+            <div className="absolute top-0 md:top-[2%] right-0 md:right-[5%] z-30">
+                <Image src="/leaf.png" alt="leaf" width={50} height={50} className="rotate-[260deg] scale-75" />
             </div>
         </section>
     );

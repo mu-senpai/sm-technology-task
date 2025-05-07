@@ -6,35 +6,39 @@ import { Menu as MenuIcon, ShoppingCart as ShoppingCartIcon, FavoriteBorder as F
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-// import LoginModal from "@/app/components/LoginModal";
-// import RegisterModal from "@/app/components/RegisterModal";
+import { useDispatch, useSelector } from "react-redux";
+import { closeLogInModal, closeRegisterModal, openLoginModal } from "@/lib/features/modalSlice"; // Modal actions
+import LoginModal from "@/app/components/LoginModal";
+import RegisterModal from "@/app/components/RegisterModal";
+import { AppDispatch } from "@/lib/store";
+import { RootState } from "@/lib/store";
 
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  // const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  // const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const pathname = usePathname();
-  const user = false; // Set this dynamically based on user login status
+  const { user } = useSelector((state: RootState) => state.auth);
+  const loginModalOpen = useSelector((state: RootState) => state.modal.loginModalOpen);
+  const registerModalOpen = useSelector((state: RootState) => state.modal.registerModalOpen);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 100); // Update the scrolled state based on window scroll position
+      setScrolled(window.scrollY > 100);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      )
-        return;
-      setDrawerOpen(open);
-    };
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event.type === "keydown" &&
+      ((event as React.KeyboardEvent).key === "Tab" ||
+        (event as React.KeyboardEvent).key === "Shift")
+    )
+      return;
+    setDrawerOpen(open);
+  };
 
   const drawerList = (
     <div
@@ -43,12 +47,7 @@ export default function Navbar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {[
-          { href: "/", icon: <HomeIcon />, text: "Home" },
-          { href: "/shop", icon: <StorefrontIcon />, text: "Shop" },
-          { href: "/about-us", icon: <InfoOutlinedIcon />, text: "About us" },
-          { href: "/blog", icon: <ArticleOutlinedIcon />, text: "Blog" },
-        ].map((item) => (
+        {[{ href: "/", icon: <HomeIcon />, text: "Home" }, { href: "/shop", icon: <StorefrontIcon />, text: "Shop" }, { href: "/about-us", icon: <InfoOutlinedIcon />, text: "About us" }, { href: "/blog", icon: <ArticleOutlinedIcon />, text: "Blog" }].map((item) => (
           <Link key={item.text} href={item.href}>
             <ListItemButton selected={pathname === item.href}>
               <ListItemIcon>{item.icon}</ListItemIcon>
@@ -93,6 +92,11 @@ export default function Navbar() {
           backgroundColor: scrolled || pathname !== "/" ? "white" : "transparent",
           boxShadow: "none",
           color: "black",
+          width: "100%",
+          maxWidth: "90rem",
+          margin: "0 auto",
+          left: 1 / 2,
+          right: 1 / 2,
         }}
       >
         <Toolbar className="mx-auto w-full flex justify-between">
@@ -150,7 +154,7 @@ export default function Navbar() {
                     backgroundColor: "rgba(255,255,255,0.15)",
                   },
                 }}
-                // onClick={() => setLoginModalOpen(true)}
+                onClick={() => dispatch(openLoginModal())}
               >
                 Sign In
               </Button>
@@ -189,8 +193,8 @@ export default function Navbar() {
         {drawerList}
       </Drawer>
 
-      {/* <LoginModal open={isLoginModalOpen} onClose={() => setLoginModalOpen(false)} />
-      <RegisterModal open={isRegisterModalOpen} onClose={() => setRegisterModalOpen(false)} /> */}
+      <LoginModal open={loginModalOpen} onClose={() => dispatch(closeLogInModal())} />
+      <RegisterModal open={registerModalOpen} onClose={() => dispatch(closeRegisterModal())} />
     </>
   );
 }
