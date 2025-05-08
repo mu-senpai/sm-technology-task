@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Chip, CircularProgress } from "@mui/material";
 import { useGetProductByIdQuery, useGetProductsQuery } from "@/lib/features/apiSlice";
 import { Product } from "@/app/(home)/components/ProductCard";
