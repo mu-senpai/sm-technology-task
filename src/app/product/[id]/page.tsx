@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";  // Mark the component as a client-side component.
+"use client";
 
 import React from "react";
 import { notFound } from "next/navigation";
@@ -10,7 +9,7 @@ import ProductDetails from "./components/ProductDetails";
 import RelatedProducts from "./components/RelatedProducts";
 
 interface ProductPageProps {
-  params: { id: any };
+  params: { id: unknown };
 }
 
 const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
