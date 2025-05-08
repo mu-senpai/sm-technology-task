@@ -1,21 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Chip, CircularProgress } from "@mui/material";
 import { useGetProductByIdQuery, useGetProductsQuery } from "@/lib/features/apiSlice";
 import { Product } from "@/app/(home)/components/ProductCard";
 import ProductDetails from "./components/ProductDetails";
 import RelatedProducts from "./components/RelatedProducts";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 
-// Define props interface
-interface ProductPageProps {
-  params: { id: string }; // Get params from dynamic route
-}
 
-// Use the React.use() to unwrap the params (dynamic routing)
-const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
-  const { id } = React.use(params); // Unwrap params to get `id`
+// Using React.use to unwrap params
+const ProductPage: React.FC = () => {
+  const params = useParams();
+  const id = params.id as string
 
   // Fetch the single product using RTK Query
   const { data: productData, isLoading: productLoading, isError: productError } = useGetProductByIdQuery(id);
