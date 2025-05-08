@@ -1,26 +1,28 @@
 "use client";
 
-import React from "react";
-import { notFound } from "next/navigation";
+import React, { useState } from "react";
 import { Chip, CircularProgress } from "@mui/material";
 import { useGetProductByIdQuery, useGetProductsQuery } from "@/lib/features/apiSlice";
 import { Product } from "@/app/(home)/components/ProductCard";
 import ProductDetails from "./components/ProductDetails";
 import RelatedProducts from "./components/RelatedProducts";
+import { notFound } from "next/navigation";
 
+// Directly use params from dynamic route (no need for getServerSideProps)
 interface ProductPageProps {
-  params: { id: unknown };
+  params: { id: string }; // Dynamic params
 }
 
 const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
-  // Fetch the product by ID
-  const { data: productData, isLoading: productLoading, isError: productError } = useGetProductByIdQuery(params.id);
+  const { id } = params; // Get the id from params
+
+  // Fetch the single product using RTK Query
+  const { data: productData, isLoading: productLoading, isError: productError } = useGetProductByIdQuery(id);
 
   // Fetch all products for related products
   const { data: allProducts, isLoading: allLoading, isError: allError } = useGetProductsQuery({});
 
-  // If there’s an error, show the 404 page
-  if (productError || allError) return notFound();
+  if (productError || allError) notFound(); // Handle errors
 
   if (productLoading || allLoading)
     return (
@@ -29,19 +31,15 @@ const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
       </div>
     );
 
-  // Get product details
   const product: Product = productData?.data;
-  // Filter related products by categoryId
   const related = allProducts?.data?.filter(
     (p: Product) => p.categoryId === product.categoryId && p.id !== product.id
   );
 
   return (
     <main className="w-[90%] md:w-[83.33%] mx-auto py-28">
-      {/* Display the product details */}
       <ProductDetails product={product} />
 
-      {/* Description and Reviews (placeholder) */}
       <section className="mt-8">
         <div className="flex gap-2 mb-6">
           <Chip label="Description" sx={{ backgroundColor: "#749B3F", color: "white", borderRadius: "6px", cursor: "pointer" }} />
@@ -52,7 +50,6 @@ const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
         </p>
       </section>
 
-      {/* Related Products */}
       {related?.length > 0 && <RelatedProducts products={related} />}
     </main>
   );
