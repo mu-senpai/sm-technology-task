@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";  // Mark the component as a client-side component.
 
 import React from "react";
@@ -9,7 +10,7 @@ import ProductDetails from "./components/ProductDetails";
 import RelatedProducts from "./components/RelatedProducts";
 
 interface ProductPageProps {
-  params: { id: string };
+  params: { id: any };
 }
 
 const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
